@@ -5,13 +5,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import page.object.MainPage;
-import page.object.OrderPage;
+import page_object.MainPage;
+import page_object.OrderPage;
+import page_object.UrlConstants;
+
+import java.time.Duration;
 
 import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(Parameterized.class)
-public class SecondScenario {
+public class OrderFlowPositive {
 
     private final String name;
     private final String surname;
@@ -23,9 +26,9 @@ public class SecondScenario {
     private final String comment;
     private WebDriver driver;
 
-    public SecondScenario(String name, String surname,
-                          String address, int stationIndex, String phone,
-                          String date, int durationIndex, String comment) {
+    public OrderFlowPositive(String name, String surname,
+                             String address, int stationIndex, String phone,
+                             String date, int durationIndex, String comment) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -47,36 +50,30 @@ public class SecondScenario {
     @Test
     public void flowOnTopOrderButton() throws InterruptedException {
         driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.get("https://qa-scooter.praktikum-services.ru");
         driver.manage().window().maximize();
         MainPage mainPage = new MainPage(driver);
         mainPage.clickOnOrderButtonTop();
-        Thread.sleep(1000);
         OrderPage orderPage = new OrderPage(driver);
         orderPage.forWhomFormFillingAndNext(name, surname, address, stationIndex, phone);
-        Thread.sleep(1000);
         orderPage.aboutRentFormFillAndOrder(date, durationIndex, comment);
-        Thread.sleep(1000);
         orderPage.clickOnConfirmOrderButton();
-        Thread.sleep(1000);
         MatcherAssert.assertThat(orderPage.getTextFromOrderResult(), containsString("Номер заказа"));
     }
     //Проверка основного потока по нижней кнопке "Заказать"
     @Test
     public void flowOnBottomOrderButton() throws InterruptedException {
         driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.get(UrlConstants.SITE_PAGE);
         driver.manage().window().maximize();
         MainPage mainPage = new MainPage(driver);
         mainPage.clickOnOrderButtonBottom();
-        Thread.sleep(1000);
         OrderPage orderPage = new OrderPage(driver);
         orderPage.forWhomFormFillingAndNext(name, surname, address, stationIndex, phone);
-        Thread.sleep(1000);
         orderPage.aboutRentFormFillAndOrder(date, durationIndex, comment);
-        Thread.sleep(1000);
         orderPage.clickOnConfirmOrderButton();
-        Thread.sleep(1000);
         MatcherAssert.assertThat(orderPage.getTextFromOrderResult(), containsString("Номер заказа"));
     }
 

@@ -4,18 +4,21 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import page.object.MainPage;
+import page_object.MainPage;
+import page_object.UrlConstants;
+
+import java.time.Duration;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
-public class FirstScenario {
+public class CorrectAnswerTextByClickingOnQuestion {
 
     private final String expectedText;
     private final int index;
     private WebDriver driver;
 
-    public FirstScenario(String expectedText, int index) {
+    public CorrectAnswerTextByClickingOnQuestion(String expectedText, int index) {
         this.expectedText = expectedText;
         this.index = index;
     }
@@ -37,7 +40,8 @@ public class FirstScenario {
     @Test
     public void answerDisplayedOnClickIsTrue() throws InterruptedException {
         driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.get(UrlConstants.SITE_PAGE);
         driver.manage().window().maximize();
         MainPage mainPage = new MainPage(driver);
         mainPage.scrollToQuestionList();
